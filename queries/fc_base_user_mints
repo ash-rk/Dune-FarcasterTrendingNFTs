@@ -1,0 +1,63 @@
+WITH reaction_summary AS (
+  SELECT
+    target_hash,
+    SUM(CASE WHEN reaction_type = 1 THEN 1 ELSE 0 END) AS total_likes,
+    SUM(CASE WHEN reaction_type = 2 THEN 1 ELSE 0 END) AS total_recasts
+  FROM dune.neynar.dataset_farcaster_reactions
+  GROUP BY
+    target_hash
+), tiered_users AS (
+  SELECT
+    fid_active_tier_name,
+    fname
+  FROM query_3418402
+  WHERE
+    fid_active_tier_name IN ('🥈 star', '💎 vip', '🥇 influencer')
+), farcaster_data AS (
+  SELECT
+    tu.fid_active_tier_name,
+    tu.fname AS username,
+    c.id,
+    c.fid,
+    c.hash,
+    c.text AS cast_text,
+    LENGTH(c.text) AS text_length,
+    c.embeds,
+    c.created_at,
+    rs.total_likes,
+    rs.total_recasts,
+    JSON_EXTRACT_SCALAR(u.verified_addresses, '$[0]') AS first_verified_address
+  FROM dune.neynar.dataset_farcaster_casts AS c
+  JOIN dune.neynar.dataset_farcaster_profile_with_addresses AS u
+    ON TRY_CAST(c.fid AS VARCHAR) = TRY_CAST(u.fid AS VARCHAR)
+  LEFT JOIN reaction_summary AS rs
+    ON c.hash = rs.target_hash
+  JOIN tiered_users AS tu
+    ON u.fname = tu.fname
+  WHERE
+    (
+      c.parent_fid IS NULL OR TRY_CAST(c.parent_fid AS VARCHAR) = ''
+    )
+    AND c.created_at >= CURRENT_DATE - INTERVAL '14' DAY
+    AND c.created_at < CURRENT_DATE - INTERVAL '7' DAY
+    AND CARDINALITY(TRY_CAST(JSON_PARSE(u.verified_addresses) AS ARRAY(JSON))) > 0
+), base_mints_filtered AS (
+  SELECT
+    base_mints.token_standard,
+    base_mints.buyer,
+    base_mints.nft_contract_address
+  FROM nft.mints AS base_mints
+  WHERE
+    base_mints.blockchain = 'base' AND base_mints.trade_category = 'Mint'
+)
+SELECT
+  fd.*,
+  bmf.token_standard,
+  bmf.buyer,
+  fc_mints.*
+FROM farcaster_data AS fd
+JOIN base_mints_filtered AS bmf
+  ON TRY_CAST(fd.first_verified_address AS VARCHAR) = TRY_CAST(bmf.buyer AS VARCHAR)
+JOIN dune.takeshinakamoto.dataset_trending_mints AS fc_mints
+  ON bmf.nft_contract_address = fc_mints.token_address
+LIMIT 1000
