@@ -2,6 +2,14 @@
 
 This initiative focuses on identifying and illustrating the most popular mints on the base layer of Ethereum, specifically targeting the Farcaster community. By leveraging data from the Airstack API to pinpoint trending NFTs and correlating these findings with Farcaster user engagement via Dune Analytics, we offer unique insights into the NFT landscape.
 
+## Visual Insights and Detailed Analysis
+
+For a deeper dive into the trends and our analysis, view [Dune dashboard](https://dune.com/takeshinakamoto/fctrendingmints). The dashboard offers interactive visualizations and comprehensive insights into Farcaster's trending mints and user engagement across different tiers.
+
+![Farcaster Trending Mints & User Tiers](https://github.com/ash-rk/Dune_Dashboard-Farcaster_Trending_NFTs/blob/main/FC%20Trending%20Mints%20%26%20User%20Tiers.png)
+
+Explore the dashboard to understand the dynamics of NFT popularity and community engagement on Farcaster.
+
 ## Data Source and Methodology
 
 - **Airstack API:** Used to compile a list of trending NFTs.
@@ -16,14 +24,6 @@ We classify users into five tiers based on weekly metrics:
 - 🥈 Star: 1,000+ followers, at least 5 casts, and over 500 engagement score
 - 🥇 Influencer: 10,000+ followers, at least 10 casts, and over 2,500 engagement score
 - 💎 VIP: 50,000+ followers, at least 10 casts, and over 5,000 engagement score
-
-## Visual Insights and Detailed Analysis
-
-For a deeper dive into the trends and our analysis, view our [Dune dashboard](https://dune.com/takeshinakamoto/fctrendingmints). The dashboard offers interactive visualizations and comprehensive insights into Farcaster's trending mints and user engagement across different tiers.
-
-![Farcaster Trending Mints & User Tiers](https://github.com/ash-rk/Dune_Dashboard-Farcaster_Trending_NFTs/blob/main/FC%20Trending%20Mints%20%26%20User%20Tiers.png)
-
-Explore the dashboard to understand the dynamics of NFT popularity and community engagement on Farcaster.
 
 ## Contributions
 
